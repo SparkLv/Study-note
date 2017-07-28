@@ -31,4 +31,55 @@
 
 3. 没有基础URL，可能只是一个不完整或损坏了的URL  
 
-![http-url](img/http-url.png)
+![http-url](img/http-url.png)  
+
+##HTTP报文
+###报文流
+HTTP使用术语流入（inbound）和流出（outbound），来描述事务处理的方向，流入指报文流入到源服务器  
+###报文向下游流动
+所有报文都是向下游流动，所有报文的发送者都在接收者的上游。
+###报文的组成部分
+每条报文都包含一条来自客户端的请求，或者一条来自服务器的响应。  
+都由三个部分组成：对报文进行描述的起始行（start line）、包含属性的首部（header）块、可选的包含数据的主体（body）部分  
+  
+* 起始行和首部就是由行分隔的ASCII文本，每行都以一个由两个字符组成的终止序列作为结束，其中包含一个回车符和一个换行符，这个终止序列可以写作CRLF
+* 报文的主体是一个可选的数据块，主体可以包含文本或二进制数据，也可以为空  
+###报文语法  
+HTTP报文都可以分为两类：请求报文和响应报文  
+  
+请求报文格式  
+
+    <method> <request-url> <version>
+	<headers>
+	<entity-body>  
+  
+响应报文格式  
+
+	<version><status><reason-phrase>
+	<header>
+	<entity-body>  
+
+* method  
+  客户端希望服务器对资源执行的动作
+  ![http-method](img/http-method.png)
+  Head：可以用来在不获取资源的情况下了解资源的情况，如判断类型，查看状态码以确定资源是否存在，查看首部测试资源是否被修改  
+  PUT：方法的语义就是让服务器用请求的主体部分来创建一个由所请求的URL命名的新文档，若已存在则替代  
+  OPTIONS：为请求web服务器告知其支持的各种功能，支持的方法  
+  DELETE：请服务器删除请求URL所指定的资源
+* request-url
+  命名了所请求资源，或者URL路径组件的完整URL
+* version
+  报文所以使用的HTTP版本。如HTTP/\<major\>.\<minor\>
+* status-code
+  三位数字描述请求过程中所发生的情况
+  ![htto-status](img/http-status.png)
+  ![htto-status(1)](img/http-status(1).png)
+* reason-phrase
+  status-code的可读版本
+* header 
+  可以有0个或多个首部，每个首部都包含一个名字，后面跟一个冒号，然后是一个可选的空格，接着是一个值，最后是一个CRLF
+* entity-body
+  包含一个由任意数据组成的数据块
+####首部
+分为
+
