@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title></title>
 	<link rel="stylesheet" type="text/css" href="css/vue-test.css">
 	<script type="text/javascript" src="js/vue.js"></script>
 </head>
+
 <body>
 	<div id="app">
 		<div>{{a}}</div>
@@ -15,7 +17,41 @@
 		<div>{{reduce2()}}</div>
 		<div v-bind:class="{kobe:p1,bryant:p2}"></div>
 		<div v-bind:style="{'background-color':'blue',width:'80px',height:'80px'}"></div>
+		<template v-if="showForm">
+			<label>用户名</label>
+			<input type="text" key="1"/>
+		</template>
+		<template v-else>
+			<label>密码</label>
+			<input type="text" key="2"/>
+		</template>
+		<button @click="toggleS()">改变</button>
+		<div v-for="(item,key,index) of obj1">
+			#{{index}} {{key}}:{{item}}
+		</div>
+		<label>lv</label>
+		<input type="checkbox" value="lv" v-model="ch1">
+		<label>b111111</label>
+		<input type="checkbox" value="bin" v-model="ch1">
+		<div>{{ch1}}</div>
+		<br>
+		<input type="radio" v-model="rad" value="rad1">
+		<input type="radio" v-model="rad" value="rad2">
+		<div>{{rad}}</div>
+		<select v-model="sel">
+			<option>qq</option>
+			<option>ww</option>
+			<option>ee</option>
+			<option>rr</option>
+			<option>tt</option>
+		</select>
+		<div>
+			{{sel}}
+		</div>
+		<input type="text" v-model.lazy="lazy">
+		<div>{{lazy}}</div>
 	</div>
 	<script type="text/javascript" src="js/vue-test.js"></script>
 </body>
+
 </html>
