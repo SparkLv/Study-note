@@ -135,7 +135,224 @@ v-on:keyup.键值
 ###修饰符  
 * .lazy：在change事件中同步而不是input事件(回车)  
 * .number：将输入值转换为number类型  
-* .trim：自动过滤用户输入的首尾空格
+* .trim：自动过滤用户输入的首尾空格  
+## 组件  
+### 注册  
+#### 全局组件  
+使用Vue.component(tagName,options)注册  
+#### 局部注册  
+通过使用组件实例选项注册，可以使组件仅在另一个实例/组件的作用域中可用,例如  
+
+    var child={template:'<div>aaa</div>'}
+    new Vue({
+        components:{
+            'my-component':child
+        }
+    })  
+##### 当使用DOM作为模板时，会受到HTML的一些限制，例如\<ul> \<table>等,可以使用\<tr is="my-com">\</tr>来解决  
+##### data必须是以函数的形式，因为这样可以让每个组件有自己独立的变量  
+### 父子组件传递数据  
+#### props down  
+在子组件中使用props:['']，获取父组件上的属性值  
+##### 动态prop可以使用v-bind(:)来绑定,例如数字不用v-bind绑定的话，获取的是一个字符串。不应该在子组件内部改变prop，如果这样做了，Vue会发出警告
+##### 可以对prop进行验证，如果传入的数据不符合规格，Vue会发出警告，这时props不应该是个数组，而应该是一个对象，value是类型  
+#### event up  
+子组件与父组件的通信是通过自定义事件来实现，可以使用this.$emit()触发事件  
+### Slot分发内容  
+##### 子组件的模板内容应在子组件的作用域内编译  
+除非子组件模板包含至少一个\<slot>插口，否则父组件内容将会被丢弃，当子组件模板只有一个没有属性的slot时，父组件整个内容片段将插入到slot所在的dom位置，并替换掉slot标签本身  
+#### 具名slot  
+\<slot>元素可以用一个特殊的属性name来配置如何分发内容，例如  
+
+    <h1 slot="xx">
+    <slot name="xx">  
+
+仍然可以有一个匿名slot，是默认slot，作为找不到匹配内容片段的备用插槽  
+#### 作用域插槽  
+
+    <div class="child">
+        <slot text="xxx"></slot>
+    </div>
+    <div class="parent">
+        <child>
+            <template scope="props">
+                <span>hhhh</span>
+                <span>{{props.text}}</span>
+            </template>
+        </child>
+    </div>
+#### 动态组件  
+通过使用保留的<component>元素，动态绑定到is特性，使得多个组件可以使用同一个挂载点，并动态切换  
+##### 如果把切换出去的组件保留在内存中，可以保留它的状态或避免重新渲染，可以添加一个<keep-alive>标签
+#### 异步组件  
+Vue.component的第二个参数是一个函数  
+
+    function(resolve,reject){
+        resolve({
+            template:''
+        })
+        reject('')
+    }
+    resolve为获取成功回调，reject为失败指示  
+
+#### X-Templates  
+一种指定模板的方式是在javascript标签中使用text/x-template类型，并指定一个id  
+    
+    <script type="text/template" id="xxx">
+    <p></p>
+    </script>
+    Vue.component('zz',{
+        template:'#xxx'
+    })  
+##### 当组件中包含大量静态内容时，可以考虑使用v-once将渲染结果缓存起来  
+### 响应式原理  
+把一个js对象传给Vue实例的data选项，Vue将遍历此对象所有的属性，并使用Object.defineProperty，把这些属性全部转为getter/setter  
+### 变化检测  
+受现代js的限制，vue不能检测到对象属性的添加或删除，所以属性必须在data对象上存在才能让Vue转换它，这样才能让它是响应的,可以使用Vue.set(obj,key,value)方法将响应属性添加到嵌套的对象上，vm.$set实例方法是它的别名
+另一种方法是使用this.x = Object.assign({},this.x,{a:1.b:2})
+### 异步更新队列  
+Vue异步执行DOM更新，只要观察到数据变化，Vue将开启一个队列，并缓冲在同一事件循环中发生的所有数据改变。
+使用Vue.nextTick(callback),回调函数会在DOM更新完成后就会调用  
+在组件内可以使用this.$nextTick()  
+### 过渡效果  
+#### 单元素/组件的过渡  
+在一下情况下可以给任何元素和组件添加entering/leaving过渡  
+* v-if  
+* v-show  
+* 动态组件  
+* 组件根节点  
+使用transition封装组件,添加name属性  
+#### 过渡的CSS类名  
+* v-enter：定义进入过渡的开始状态。在元素被插入时生效  
+* v-enter-active：定义过渡的状态。在元素整个过渡过程中作用，在元素被插入时生效，在transition/animation完成后移除。这个类可以被用来定义过渡的过程时间，延迟和曲线函数  
+* v-enter-to：定义进入过渡的结束状态。在元素被插入一帧后生效，在transition/animation完成后移除  
+* v-leave：定义离开过渡的开始状态。在离开过渡触发时生效，在下一帧移除  
+* v-leave-active：定义过渡的状态。
+* v-leave-to：定义离开过渡的结束的过渡状态。在离开过渡被触发一帧后生效
+##### 可以使用name来替换v 
+
+    .x-enter-active, .x-leave-active{
+        transition:opacity .5s
+    }
+    .x-enter, .x-leave-to{
+        opacity:0
+    }
+#### CSS动画  
+css动画同css过渡，区别是在动画中v-enter类名在节点插入DOM后不会立即删除，而是在animationed事件触发时删除  
+
+    .x-enter-active{
+        animation:yy .5s
+    }
+    .x-leave-active{
+        animation:yy .5s
+    }
+    @keyframes yy{
+        0%{
+
+        }
+        50%{
+
+        }
+        100{
+
+        }
+    }  
+
+可以使用  
+* enter-class
+* enter-active-class
+* enter-to-class
+* leave-class
+* leave-active-class
+* leave-to-class  
+来自定义过渡类名,他们的优先级高于普通的类名，可以与Animate.css结合使用  
+#### 显性的过渡效果持续时间  
+可以在transition上使用:duration来设置显性过渡效果持续时间  
+
+    例如  
+    <transition :duration="1000"></transition>
+    <transition :duration="{enter:500,leave:800}"><transition>
+    定制的是进入和移出的持续时间  
+#### js钩子  
+transition的事件  
+* before-enter
+* enter
+* after-enter
+* enter-cancelled
+* before-leave
+* leave
+* after-leave
+* leave-cancelled
+##### 当只用js过渡的时候，在enter和leave中,回调函数done是必须的。否则，他们会被同步调用，过渡会立即完成。并且尽量使用v-bind:css="false"，Vue会跳过CSS的检测，可以避免过渡过程中CSS的影响  
+#### 多个元素的过渡  
+当有相同标签名的元素切换时，需要通过key特性设置唯一的值来标记让Vue区分  
+#### 过渡模式  
+* in-out 新元素先进行过渡，完成之后当前元素过渡离开
+* out-in 当前元素先进行过渡，完成之后新元素进入  
+
+例如  
+
+    <transition name="xx" mode="out-in">
+
+#### 列表过渡  
+\<transition-group>默认渲染一个span标签，要改变的话可以使用tag属性  
+## Vue-router 2
+安装  
+    
+    npm install vue-router
+    import Vue from 'vue'
+    import VueRouter from 'vue-router'
+    Vue.use(VueRouter)
+##### 如果使用全局的script标签，则无需如此  
+使用
+
+    <router-view></router-view>
+    <router-link to="/x">x</router-link>
+    <router-link to="/y">x</router-link>
+    const routers = [
+        {path:'/x',component:x},
+        {path:'/y',component:y}
+    ]
+    const router = new VueRouter({
+        routers
+    })
+    var vm = new Vue({
+        router
+    })  
+嵌套路由  
+
+    routers:[
+        {
+            path:'/user/x',
+            compoent:x,
+            children:[
+                {path:'/z',component:z}
+            ]
+        }
+    ]
+命名视图  
+在界面中可以使用多个router-view
+
+    <router-view></router-view>
+    <router-view name="a"></router-view>
+    <router-view name="b"></router-view>
+    const router =new VueRouter({
+        routers:[
+            {
+                path:'/x',
+                components:{
+                    default:x,
+                    a:y,
+                    b:z,
+                }
+            }
+        ]
+    })
+命名路由  
+使用一个name属性，使用的时候是一个{name:''}
+重定向  
+可以添加一个redirect属性
+
 
 
 
