@@ -56,3 +56,21 @@ loader可以将文件从不同的语言转换为javascript(为此，首先安装
 webpack --module-bind jade-loader --module-bind 'css=style-loader!css-loader'
 ### plugins  
 plugins常用于在打包模块的compilation和chunk生命周期执行操作和自定义功能
+### 热更新  
+
+       npm install webpack-dev-server --save-dev
+       webpack.config.js
+
+       const webpack = require('webpack')  
+       devServer:{
+           contentBase:__dirname+'/dist'
+       }
+       plugins:[
+           new webpack.HotModuleReplacementPlugin()
+       ]
+
+       package.json
+
+       script:{
+           "dev":"webpack-dev-server --open"
+       }
