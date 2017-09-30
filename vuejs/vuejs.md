@@ -352,6 +352,65 @@ transition的事件
 使用一个name属性，使用的时候是一个{name:''}
 重定向  
 可以添加一个redirect属性
+## Vuex  
+Vuex是专为Vue.js应用程序开发的状态管理模式。采用集中存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。  
+这个状态自管理应用包含以下几个部分：  
+* state，驱动应用数据源
+* view，以声明方式将state映射到视图
+* actions，响应在view上的用户输入导致的状态变化  
+
+vue可以利用vuejs的细粒度数据相应机制来进行高效的状态更新  
+![vuex](img/vuex.png)
+### 安装
+    npm install vuex --save  
+使用  
+
+    import Vue from 'vue'  
+    import Vuex from 'vuex'
+    Vue.use(Vuex)  
+### 核心概念  
+#### State  
+Vuex使用单一状态树，用一个对象就包含了全部的应用层级状态  
+由于Vuex的状态储存是响应式的，从store实例中读取状态最简单的方法就是在计算属性中返回某个状态  
+
+    computed:{
+        count(){
+            return this.$store.state.count
+        }
+    }  
+#### Getter  
+可以从store中的state中派生出一些状态  
+就像计算属性一样，getter的返回值会根据它的依赖被缓存起来，只有当它的依赖值发生改变才会被重新计算
+接受state作为其第一个参数，其他getter作为第二个参数 
+
+    this.$store.getters.xx  
+#### Mutation  
+更改Vuex中state的唯一方法是mutation，每个mutation都包含一个type和回调函数，而且可以接受第二个参数作为载荷（多个值可以把第二个参数写成对象）  
+
+    this.$store.commit('type',{});  
+    mutations:{
+        m1(state,play){
+
+        }
+    }
+在对象上添加新属性应使用Vue.set(obj,'pro','val');  
+
+mutation必须是同步函数  
+#### Action  
+* 提交的是mutation，而不是直接变更状态
+* 可以包含任意异步操作  
+
+        actions:{
+            in(context){
+                context.commit('x')
+            }
+        }
+        也可以使用
+        in({commit}){
+            commit('x')
+        }
+        使用
+        this.dipatch('in',canshu)
 
 
 
