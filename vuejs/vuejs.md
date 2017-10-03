@@ -9,7 +9,7 @@
 除了data属性，Vue实例暴露一些有用的实例属性和方法，这些属性和方法都有前缀$。
 ### 生命周期  
 每个Vue实例在被创建之前都要经过一系列的初始化过程。在这个过程中，实例会调用一些生命周期钩子，钩子的this指向调用它的Vue实例。  
-![vue-life](img/vue-life-cycle.png)
+![vue-life](../img/vue-life-cycle.png)
 ## 模板语法  
 vue使用了基于HTML的模板语法，允许开发者声明式地将DOM绑定只底层Vue实例的数据，所有Vue模板都是合法的HTML。在底层实现上，vue将模板编译成虚拟DOM渲染函数。 
 ### 插值 
