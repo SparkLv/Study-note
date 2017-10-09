@@ -53,7 +53,11 @@ loader可以将文件从不同的语言转换为javascript(为此，首先安装
         }
 *  内联：可以在import语句或任何等效于import的方式中指定loader。使用！将资源中的loader分开
 * CLI：例如  
-webpack --module-bind jade-loader --module-bind 'css=style-loader!css-loader'
+webpack --module-bind jade-loader --module-bind 'css=style-loader!css-loader'  
+### 对于使用file-loader时，加载图片，在打包编译之后，index.html中img的src地址并没有替换的情况  
+
+    使用以下写法
+    <img src="${require('./assets/erha.jpg')}">
 ### plugins  
 plugins常用于在打包模块的compilation和chunk生命周期执行操作和自定义功能
 ### 热更新  
