@@ -74,7 +74,7 @@ rest参数的形式为 ...变量名（是个数组） 用于获取函数的多�
     function sortNumber(){
         return Array.prototype.slice.call(arguments).sort();
     }  
-    const sortNumbers = (...number)=>numbers.sort();  
+    const sortNumbers = (...numbers)=>numbers.sort();  
 
 #### 注意，rest参数之后不能再有其他参数，否则会报错  
 ### name属性  
@@ -107,6 +107,30 @@ ES6 允许使用箭头"=>"定义函数
 
 * 箭头函数不可以使用arguments对象，该对象在函数体内不存在。如果要用，可以使用rest参数代替  
 ## 数组的扩展  
+### 扩展运算符  
+是三个点(...)，好比rest参数的逆运算，将一个数组转为用逗号分隔的参数序列
+#### 复制数组  
+
+    const a1 = [1,2];
+    const a2 = [...a1];
+    或 conse [...a2] = a1  
+
+#### 合并数组  
+
+    [1,2,...more]
+
+### Array.from()  
+用于将两类对象转化为真正的数组，一种是类似数组的对象，另一种是可遍历的对象。它还可以接受第二个参数，作用类似于数组的map方法，用来对每个元素进行处理，将处理后的值放入返回的数组。  
+
+### Array.of()  
+用于将一组值转换为数组（因为当Array构造函数没有参数和有一个参数或多个参时，行为会有差异），当Array.of()没有参数，就返回一个空数组。  
+
+### 数组实例的find和findIndex  
+参数为一个回调函数（参数依次为，当前值、当前位置、原数组），对数组所有成员使用这个函数，直到出现第一个符合条件的数组成员或者位置  
+这两个方法都可以发现NaN弥补了IndexOf方法的不足  
+
+## Promise  
+
 
 
 
