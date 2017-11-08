@@ -2,6 +2,8 @@
 
 ## 本笔记基于javascript高级程序设计第三版，加上自身实践经验攥写
 
+* [1.语法示例](#1)
+
 ## 一、Javascript简介
 
 js最早用于填写域的验证
@@ -31,7 +33,7 @@ ECMAScript与web浏览器没有依赖关系,不包含输入和输出定义。`EC
 是针对XML但经过扩展用于HTML的应用程序编程接口,DOM把整个页面映射为一个多层节点结构。XML和HTML页面中的每个组成部分都是某种类型的节点，这些节点又包含着不同类型的数据
 
 * DOM1级由两个模块组成：DOM核心(DOM Core)和DOM HTML
-  * DOM核心规定是如何映射基于XML的文档结构，以便简化对文档中人一部分的访问和操作
+  * DOM核心规定是如何映射基于XML的文档结构，以便简化对文档中任一部分的访问和操作
   * DOM HTML模块则在DOM核心的基础上加以拓展，添加了针对HTML的对象和方法
 * DOM2级引入更多的新模块
   * DOM视图
@@ -67,13 +69,15 @@ ECMAScript与web浏览器没有依赖关系,不包含输入和输出定义。`EC
 
 1. 直接嵌入
 
-使用时只需指定`type`属性，在解释器对`script`元素内部的所有代码求值完毕以前，页面中的其余内容都不会被浏览器加载或显示
-2. 包含外部`javascript`
+    使用时只需指定`type`属性，在解释器对`script`元素内部的所有代码求值完毕以前，页面中的其余内容都不会被浏览器加载或显示
 
-使用src属性引入外部js文件，如果没有`async`和`defer`属性，那么js会按顺序解析  
-3. 对于不支持`script`或者禁用`script`的浏览器需要使用`noscript`标签，在标签内写入文字，会展现在界面上
+1. 包含外部`javascript`
 
-*注意：`script`标签的位置最好放在body结束标签之前，如果放在`head`标签内，则会影响页面加载速度*
+    使用src属性引入外部js文件，如果没有`async`和`defer`属性，那么js会按顺序解析
+
+1. 对于不支持`script`或者禁用`script`的浏览器需要使用`noscript`标签，在标签内写入文字，会展现在界面上
+
+注意：`script`标签的位置最好放在body结束标签之前，如果放在`head`标签内，则会影响页面加载速度
 
 #### 外部文件的优点
 
@@ -167,3 +171,39 @@ var m=1,n=2,b=3;
 * number -- "number"
 * null object -- "object"
 * function -- "function"
+
+#### Undefined
+
+对于声明但未初始化的变量，会自动赋予一个`undefined`值，除了可以使用`typeof`，没有其他用处（也可以使用`delete`，但是严格模式下会报错）
+
+对于未声明的变量使用`typeof`，同样会返回`undefined`
+
+#### Null
+
+`null`表示一个空对象指针，所以`typeof`会返回`object`
+
+对于定义的变量在将来准备用于保存对象，可以将变量赋值为`null`，由于`undefined`派生自`null`所以
+
+```javascript
+undefined == null //true
+```
+
+### Boolean
+
+只有两个字面值`true`和`false`（区分大小写）
+
+`ECMAScript`中所有类型都有与`boolean`值等价的转换值，可以使用`Boolean()`函数进行转换，转换规则如下
+
+* 转换为`true`的
+  * String--非空字符串
+  * Number--任何非零数字值（包括无穷）
+  * Object--任何对象
+  * Undefined--n/a（没有）
+
+* 转换为`false`的
+  * String--""(空字符串)
+  * Number--0或NaN
+  * Object--null
+  * Undefined--undefined
+
+#### Number类型
