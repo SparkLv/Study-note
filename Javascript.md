@@ -1,8 +1,7 @@
 # Javascript
+<hr>
 
 ## 本笔记基于javascript高级程序设计第三版，加上自身实践经验攥写
-
-* [1.语法示例](#1)
 
 ## 一、Javascript简介
 
