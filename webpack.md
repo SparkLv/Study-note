@@ -245,5 +245,3 @@ index.js
 import(/*webapckChunkName: "lodash"*/'lodash').then(_=>{
 }).catch(error=>console.log(error))
 ```
-
-## 缓存
