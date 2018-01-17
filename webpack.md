@@ -1,6 +1,33 @@
 # webpack 2.0
 
 ---
+## 安装
+
+```node
+npm install --save-dev webpack
+```
+
+webpack.config.js
+
+```javascript
+const path = require('path')
+
+module.exports = {
+    entry:'./src/index.js',
+    output:{
+        filename:'bundle.js',
+        path:path.resolve(__dirname,'dist')
+    }
+}
+```
+
+package.json
+
+```javascript
+"scripts":{
+    "build":"webpack"
+}
+```
 
 ## 核心概念
 
@@ -92,7 +119,7 @@ webpack --module-bind jade-loader --module-bind 'css=style-loader!css-loader'
 
 plugins常用于在打包模块的compilation和chunk生命周期执行操作和自定义功能
 
-### 热更新
+#### 模块热替换
 
 ```javascript
 npm install webpack-dev-server --save-dev
@@ -100,7 +127,8 @@ webpack.config.js
 
 const webpack = require('webpack')  
 devServer:{
-    contentBase:__dirname+'/dist'
+    contentBase:__dirname+'/dist',
+    hot:true
 }
 plugins:[
     new webpack.HotModuleReplacementPlugin()
@@ -112,3 +140,110 @@ script:{
     "dev":"webpack-dev-server --open"
 }
 ```
+
+#### 精简输出
+
+```node
+npm install --save uglifyjs-webpack-plugin
+```
+
+webpack.config.js
+```javascript
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+plugins:[
+    new UglifyJsPlugin()
+]
+```
+
+## 生产环境构建
+
+### 使用webpack-merge提取出共同的配置
+
+```node
+npm install --save webpack-merge
+```
+
+webpack.prod.js
+
+```javascript
+const merge = require('webpack-merge')
+const common = require('./webpack.common.js')
+
+module.export = merge(common,{
+    plugins:[
+        new UglifyJSPlugin()
+    ]
+})
+```
+
+webpack.dev.js
+
+```javascript
+const merge = require('webpack-merge')
+const common = require('./webpack.common.js')
+
+module.export = merge(common,{
+    devtool:'inline-source-map',
+    devServer:{
+        contentBase:'./dist',
+        hot:'true'
+    }
+})
+```
+
+package.json
+
+```json
+"start":"webpack-dev-server --open --config webpack.dev.js"
+"build":"webpack --config webpack.prod.js"
+```
+
+### 指定环境
+
+```javascript
+plugins:[
+    new webpack.DefinePlugin({
+        'process.env.NODE_ENV':JSON.stringify('production')//可以自定义变量
+    })
+]
+```
+
+## 代码分离
+
+### 入口起点
+
+#### 可以设置多个入口起点
+
+* 但是如果入口chunks之间包含重复的模块，哪些重复的模块都会被引入到各个bundle中
+
+### 防止重复
+
+CommonsChunkPlugin插件可以将公共的依赖模块提取到已有入口chunk中，或者提取到一个新生成的chunk
+
+webpack.config.js
+
+```javascript
+new webpack.optimize.CommonsChunkPlugin({
+    name:'common'
+})
+```
+
+### 动态导入
+
+webpack.config.js
+
+```javascript
+output:{
+    chunkFilename:'[name].bundle.js'
+}
+```
+
+index.js
+
+```javascript
+import(/*webapckChunkName: "lodash"*/'lodash').then(_=>{
+}).catch(error=>console.log(error))
+```
+
+## 缓存
