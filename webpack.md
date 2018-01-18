@@ -245,3 +245,39 @@ index.js
 import(/*webapckChunkName: "lodash"*/'lodash').then(_=>{
 }).catch(error=>console.log(error))
 ```
+
+## 缓存
+
+### 输出文件的文件名
+
+在output.filename进行文件名替换，可以使用hash，但是更好的方式是chunkhash，即只有文件改变后，文件名才改变。
+
+例如
+```js
+output:{
+    filename:[name].[chunkhash].js
+}
+```
+
+需要注意的是，在使用chunkhash的时候，不能使用热替换插件，用于生产环境较为合理
+### 提取模板
+
+对于一些插件，框架等可以提取出来，这样就可以缓存在浏览器中，不需要每次都向服务器请求
+
+使用的是CommonsChunkPlugin
+
+例如
+```js
+entry:{
+    plugin:['react','vue']
+},
+plugins:[
+    new CommonsChunkPlugin({
+        name: plugin
+    })
+]
+```
+
+### 模块标识符
+
+在添加或者删除一个文件后，所有chunk的name会发生改变，这是因为解析顺序的改变会导致module.id的改变。如果重新缓存提取的公用模块，会很不理想，可以使用两种插件来优化，一个是NameModuesPlugin，将使用模块的路径，而不是数字标识符，但是执行时间会长。另一个是HashedModuleIdsPlugin，推荐用于生产环境
