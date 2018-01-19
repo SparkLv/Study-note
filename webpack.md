@@ -281,3 +281,49 @@ plugins:[
 ### 模块标识符
 
 在添加或者删除一个文件后，所有chunk的name会发生改变，这是因为解析顺序的改变会导致module.id的改变。如果重新缓存提取的公用模块，会很不理想，可以使用两种插件来优化，一个是NameModuesPlugin，将使用模块的路径，而不是数字标识符，但是执行时间会长。另一个是HashedModuleIdsPlugin，推荐用于生产环境
+
+## 创建library
+
+### 外部化依赖
+
+```js
+externals:{
+    lodash:{
+        commonjs:'lodash',
+        commonjs2:'lodash',
+        amd:'lodash',
+        root:'_'
+    }
+}
+```
+
+### 暴露library
+
+为了是library兼容不同的环境，例如CommonJS,AMD,Node.js或者作为一个全局变量，需要使用library属性
+
+```js
+filename:'example-item',
+library:'exampleItem'
+```
+
+另外需引入libraryTarget属性，以适应更多环境
+
+* 遍历：全局变量，script标签访问 'var'
+* this:this对象访问 'this'
+* window:window对象访问 'window'
+* UMD 在AMD或CommonJS的require之后访问 'umd'
+
+如果设置了library但没设置libraryTarget，默认值位var
+
+### package.json
+
+生成bundle的文件路径
+```json
+"main":"dist/example-item"
+```
+
+标准模块
+
+```json
+"module":"src/index.js"
+```
