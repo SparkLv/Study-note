@@ -327,3 +327,21 @@ library:'exampleItem'
 ```json
 "module":"src/index.js"
 ```
+
+## Shimming
+
+### 全局变量
+
+使用`ProvidePlugin`
+
+```js
+const webpack = require('webpack');
+
+plugins:[
+    new webpack.ProvidePlugin({
+        $:'jquery',
+        jQuery:'jquery',
+        window.jQuery:'jquery'
+    })
+]
+```
