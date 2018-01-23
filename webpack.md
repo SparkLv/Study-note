@@ -328,7 +328,7 @@ library:'exampleItem'
 "module":"src/index.js"
 ```
 
-## Shimming
+## shimming
 
 ### 全局变量
 
