@@ -204,6 +204,10 @@ Object.is(+0,-0)//false
 * Object.values():返回一个数组，成员是参数对象自身所有可遍历属性的键值
 * Object.entries():方法返回一个数组，成员是参数对象自身的所有可遍历属性的键值对数组
 
+### super关键字
+
+指向当前对象的构造函数
+
 ## Set数据结构
 
 Set本身是一个构造函数，用于生成没有重复值的数组
@@ -253,3 +257,117 @@ Set本身是一个构造函数，用于生成没有重复值的数组
 * values():返回键值的遍历器
 * entries():返回所有成员的遍历器
 * forEach():遍历Map的所有成员
+
+## Promise对象
+
+* promise对象不受外界影响，代表一个异步操作，有三种状态：pending（进行中）、fulfilled（已成功）、rejected（已失败）
+* 一旦状态改变，就不会再改变，任何时候都可以得到这个结果
+* 无法取消，并且Promise内部抛出的错误不会反映在外部，所以尽量写回调
+
+### 用法
+
+Promise对象是一个构造函数，用来生成实例
+
+```js
+const promise = new Promise(function(resolve,reject){
+    if(/*...*/){
+        resolve(value)
+    }
+    else{
+        reject(error)
+    }
+})
+
+promise.then(function(){
+//success
+},function(){
+//failure
+})
+```
+其实使用catch而不使用then的第二个回调函数更好，因为promise对象的错误有冒泡的性质，会一直向后传递，直到被捕获，所以错误总会被catch语句捕获
+
+## Class
+
+通过`class`关键字可以定义类
+
+```js
+class Point{
+    constructor(x,y){
+        this.x=x;
+        this.y=y;
+    }
+    toString(){
+        /*...*/
+    }
+}
+//constructor是构造方法，this代表实例对象
+```
+
+* 使用的时候，同样直接对类使用new命令。事实上，类的所有方法都定义在类的prototype上
+* 类的内部所有定义的方法都是不可枚举的
+* 通过new命令生成对象实例时，会自动调用constructor，如果没有显示定义，一个空的constructor方法会被默认添加
+* constructor方法默认返回实例对象this
+* 类必须使用new调用，否则会报错，而构造函数是可以直接调用的
+* 不存在变量提升，即实例化只能在分类定义后
+* es6不提供私有方法
+
+### 静态方法
+
+* 所有在类中定义的方法，都会被实例继承，如果一个方法前加上static关键字，表示该方法不会被实例继承，而是直接通过类来调用，成为静态方法
+* 如果静态方法中包含关键字this，这个关键字this指的是类，而不是实例
+* 静态方法和非静态方法可以重名
+* 父类的静态方法可以被子类继承
+
+```js
+class Sup{
+    static met(){
+        /*...*/
+    }
+}
+
+class Sub extends Sup{
+
+}
+
+Sub.met()
+```
+静态方法也可以从super对象上调用
+
+### 静态属性
+
+static只能定义方法，静态属性必须在类外定义
+
+### 继承
+
+通过extends关键字实现继承
+
+```js
+class Sub extends Sup{
+    constructor(x,y,z){
+        super(x,y);//调用父类的constructor(x,y)
+        this.color = z;
+    }
+    toString(){
+        return this.color + '' + super.toString()//调用父类的toString()
+    }
+}
+```
+
+* 子类必须在constructor方法中调用super方法，否则新建实例会报错，这是因为子类没有自己的this对象，而是继承父类的this对象，然后对其加工，如果不调用super方法，子类就得不到this对象
+* 与ES5的不同点
+  * ES6的继承实质是先创造父类的实例对象this，然后再用子类的构造函数修改this
+  * ES5的继承实质上是先创造子类的实例对象this，再将父类的方法添加到this上面
+
+#### Object.getPrototypeOf()
+
+Object.getPrototypeOf方法可以用来从子类上获取父类
+
+```js
+Object.getPrototypeOf(Sub) === Sup
+//true
+```
+
+#### super关键字
+
+* 作为函数使用：代表父类的构造函数
+* 作为对象：指向父类的原型对象，在静态方法中指向父类
