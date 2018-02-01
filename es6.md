@@ -371,3 +371,27 @@ Object.getPrototypeOf(Sub) === Sup
 
 * 作为函数使用：代表父类的构造函数
 * 作为对象：指向父类的原型对象，在静态方法中指向父类
+
+## Module
+
+模块功能主要由两个命令构成
+
+* import 用于输入其他模块提供的功能
+* export 用于规定模块的对外接口
+
+```js
+export var first = 'first';
+//or
+var first = 'first';
+export {first};
+//or
+export {first as fir}
+//or
+export default first
+```
+
+```js
+import {first} from 'first.js'
+```
+
+import是静态执行，所以会在代码执行前的编译阶段执行，不能用变量或者判断条件来动态加载
