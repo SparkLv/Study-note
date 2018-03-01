@@ -1,4 +1,4 @@
-# Javascript(3)
+****# Javascript(3)
 
 ---
 
@@ -264,6 +264,196 @@ document属性
 * setAttribute():接受两个参数，一个是特性名，二是特性值（IE7兼容性有问题，尽量使用属性来设置特性）
 * removeAttribute():接受一个参数即要删除的特性（IE8之前不支持）
 
+要注意的是，对于自定义的属性要使用上述三种方法，属性形式无法获取自定义，对于非自定义属性，尽量用属性形式，因为两种方式表现所有不同
 ##### attributes特性
+
+Element类型是使用attributes属性的唯一一个DOM节点类型，attributes属性中包含一个NamedNodeMap与NodeList类似。
+
+* getNamedItem('name')：返回nodeName属性等于name的节点
+* removeNamedItem('name')：从列表中移除nodeName等于name的节点
+* setNamedItem(node)：向列表中添加节点，以节点的nodeName属性作为索引
+* item(pos)：返回位于数字pos位置处的节点
+
+这种方法最大的用处适用于遍历元素的特性
+
+```js
+function outputAtt(element){
+  var pairs = new Array(),
+      attrName,
+      attrValue,
+      i,
+      len;
+
+  for(i=0,len=element.atrributes.length;i<len;i++){
+    attrName = element.attributes[i].nodeName;
+    attrValue = element.atrributes[i].nodeValue;
+    if(element.attributes[i].specified){
+      //判断是否指定了相应特性，IE中有bug回返回所有特性
+      pairs.push(attrName+':'+attrValue);
+    }
+  }
+  return pairs.join("");
+}
+```
+
+##### 创建元素
+
+document.createElement(name):name为元素名
+
+###### 元素的子节点
+
+childNodes属性包含的它的所有子节点，为了弥补浏览器对于标签间文本节点的不同，可以使用nodeType来判断是否为1（即元素节点），再执行某些操作。
+
+#### Text类型
+
+* nodeType:3
+* nodeName:'#text'
+* nodeValue:所包含的文本
+* parentNode:Element
+* 无子节点
+
+可以使用nodeValue或data属性来访问Text节点包含的文本
+
+操作文本节点的方法
+
+* appendData(text)：将text添加到节点的末尾
+* deleteData(offset,count)：从offset指定的位置开始删除count个字符
+* insertData(offset,text)：再offset指定的位置插入text
+* replaceData(offset,count,text)：用text替换从offset指定位置到offset+count为止处的文本
+* splitText(offset)：从offset指定的位置将当前文本节点分成两个文本节点
+* substringData(offset,count)：提取从offset指定的位置开始到offset+count为止处的字符串
+
+此外还有一个length属性，保存着节点中字符的数目。
+
+##### 创建文本节点
+
+document.createTextNode()：参数为插入节点的文本
+
+##### 规范文本节点
+
+可以在多个文本节点的父元素上调用normalize()方法，则会将所有文本节点合并成一个节点
+
+### DOM操作技术
+
+#### 动态脚本
+
+第一种是url方式
+
+```js
+var script = document.createElement("script");
+script.type = "text/javascript";
+script.src = "x.js";
+document.body.appendChild(script);
+```
+
+另一种方式是行内方式(由于IE不允许DOM访问其子节点等原因，所以代码如下)
+
+```js
+function loadScriptString(code){
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  try{
+    script.appendChild(document.createTextNode(code));
+  } catch(ex){
+    script.text = code;
+  }
+  document.body.appendChild(script)
+}
+```
+
+但是这种方法没有什么意义，因为代码可以在js中直接执行，不需要写在script标签中
+
+#### 动态样式
+
+同动态脚本，但是行内样式用的是cssText而不是text
+
+#### 操作表格
+
+除了传统的方法，可以使用js提供的一些方法
+
+* caption：保存着caption元素的指针
+* tBodies：是一个tbody元素的HTMLCollection
+* tFoot：保存着对tfoot元素的指针
+* tHead：保存着对thead元素的指针
+* rows：是一个表格中所有行的HTMLCollection
+* createTHead()：创建thead元素将其放在表格中，返回引用
+* createTFoot()：创建tfoot元素将其放在表格中，返回引用
+* createCaption()：创建caption元素将其放在表格中，返回引用
+* deleteTHead()：删除thead元素
+* deleteTFoot()：删除tfoot元素
+* deleteCaption()：删除caption元素
+* rows：保存着tbody元素中的HTMLCollection
+* deleteRow(pos)：删除指定位置的行
+* insertRow(pos)：向rows集合中的指定位置插入一行
+* cells：保存着tr元素中单元格HTMLCollection
+* deleteCell(pos)：删除指定位置的单元格
+* insertCell(pos)：向cells集合中的指定位置插入一个单元格，返回对插入单元格的引用
+
+#### 使用NodeList
+
+使用NodeList时应避免无限循环，应在for循环初始化变量的时候定义长度变量
+
+## DOM扩展
+
+### 选择符API
+
+querySelector():接收一个CSS选择符，返回与该模式匹配的第一个元素，没有找到匹配元素，返回null
+querySelectorAll():与querySelector方法类似，不同的是此方法返回的是一个NodeList实例
+
+以上IE 8+
+
+### 元素遍历
+
+* childElementCount：返回子元素的个数
+* firstElementChild：指向第一个子元素
+* lastElementChild：指向最后一个子元素
+* previousElementSibling：指向前一个同辈元素
+* nextElementSibling：指向后一个同辈元素
+
+以上方法会忽略空白文本节点，IE9+支持
+
+### HTML5
+
+#### 与类相关的扩充
+
+1. getElementsByClassName()：返回带有指定类的所有元素的NodeList，传入多个类名的顺序不重要（ie9+支持）
+2. classList：表示class的集合，可以使用item()方法或方括号语法(ie10+)
+    * add(value)：将给定字符串值添加到列表中
+    * contains(value)：表示列表是否存在给定值
+    * remove(value)：从列表中删除给定的字符串
+    * toggle(value)：如果已存在则删除，不存在则添加（ie不支持）
+
+#### 焦点管理
+
+* document.activeElement：会引用DOM中当前获得了焦点的元素，默认情况下，在文档刚刚加载完成时，document.activeElement中保存的是document.body元素的引用
+* document.hasFocus()：用于确定文档是否获取了焦点，获取了返回true
+
+#### HTMLDocument的变化
+
+* readyState属性(ie4+)：判断文档加载状态，loading为正在加载文档，complete为已经加载完文档
+* compatMode属性(ie6+)：混杂模式下值为BackCompat
+* head属性(ie9+)：直接获取head引用，如果不支持，仍然使用getElementByTagName()方法
+* 字符集：document.charset
+
+#### 插入标记
+
+相比创建dom操作，插入标记更简单，速度更快
+
+* innerHTML(ie6-9不同标签的赋值会存在问题)
+    * 读模式下：返回与调用元素的所有子节点对应的HTML标记（要注意的是，每种浏览器返回的值会不同）
+    * 写模式下：会根据值创建新的DOM树，然后用这个DOM树完全替换调用元素原先的所有子节点
+* outerHTML(ie4+)
+    * 读模式下：返回调用它的元素及所有子节点的HTML标签
+    * 写模式下：会根据指定的HTML字符串创建新的DOM子树，然后用这个DOM子树完全替换调用元素
+* insertAdjacentHTML()：接收两个参数，插入位置和要插入的HTML文本
+    * 第一个参数必须是下列值之一
+        * beforebegin：在当前元素之前插入一个紧邻的同辈元素
+        * afterbegin：在当前元素之下插入一个新的子元素或在第一个子元素之前再插入新的子元素
+        * beforeend：在当前元素下插入一个新的子元素，或在最后一个子元素之后再插入新的子元素
+        * afterend：再当前元素之后再插入一个紧邻的同辈元素
+
+#### scrollIntoView()方法
+
+使滚动条滚动到调用元素的顶部与视口顶部平齐的地方(为某个元素设置焦点也会产生相同的效果)
 
 ## ^_^未完待续，敬请期待！

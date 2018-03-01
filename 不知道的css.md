@@ -92,3 +92,52 @@ background:white;
         无渐变
         background: repeating-linear-gradient(60deg,#fb3, #fb3 15px, #58a 0, #58a 30px);
       ```
+
+### 复杂背景图案
+
+1. 网格
+    *  ```css
+        background:white;
+        background-image:linear-gradient(90deg,rgba(200,0,0,0.5) 50%,transparent 0),
+        linear-gradient(rgba(200,0,0,0.5) 50%, transparent 0);
+        background-size:30px 30px;
+        //也可以用px做单位取代百分比
+        //还可以吧两个背景叠加起来
+        ```
+2. 波点
+    *   ```css
+        background:#655;
+        background-image:radial-gradient(tan 30%, transparent 0);
+        background-size:30px 30px;
+        //改进
+        background:#655;
+        background-image:radial-gradient(tan 30%,transparent 0),
+        radial-gradient(tan 30%,transparent 0);
+        bakcground-size:30px 30px;
+        background-position:0 0,15px 15px;
+        ```
+3. 棋盘
+    * 将两个三角形拼在一起
+        ```css
+        background: #eee;
+        background-image:
+        linear-gradient(45deg, #bbb 25%, transparent 0),
+        linear-gradient(45deg, transparent 75%, #bbb 0),
+        linear-gradient(45deg, #bbb 25%, transparent 0),
+        linear-gradient(45deg, transparent 75%, #bbb 0);
+        background-position: 0 0, 15px 15px,
+        15px 15px, 30px 30px;
+        background-size: 30px 30px;
+        //改进
+        background: #eee;
+        background-image:
+        linear-gradient(45deg,
+        rgba(0,0,0,.25) 25%, transparent 0,
+        transparent 75%, rgba(0,0,0,.25) 0),
+        linear-gradient(45deg,
+        rgba(0,0,0,.25) 25%, transparent 0,
+        transparent 75%, rgba(0,0,0,.25) 0);
+        background-position: 0 0, 15px 15px;
+        background-size: 30px 30px;
+        ```
+
