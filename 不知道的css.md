@@ -141,3 +141,75 @@ background:white;
         background-size: 30px 30px;
         ```
 
+### 伪随机背景
+
+例子：
+
+```css
+width: 800px;
+height: 300px;
+margin: 50px;
+background: #eee;
+background-image: linear-gradient(90deg, skyblue 10px, transparent 0),
+linear-gradient(90deg, yellow 20px, transparent 0),
+linear-gradient(90deg, lightgreen 20px, transparent 0),
+linear-gradient(90deg, gray 20px, transparent 0);
+background-size: 91px 100%, 71px 100%, 51px 100%, 31px 100%;
+```
+
+### 连续的图像边框
+
+主要的思路就是在背景图片之上，再叠加一层纯白的实色背景。为了让下层的图片背景透过边框区域显示出来，我们需要给两层背景指定不同
+的background-clip 值。最后一个要点在于，我们只能在多重背景的最底层设置背景色，因此需要用一道从白色过渡到白色的CSS 渐变来模拟出纯
+白实色背景的效果。
+
+直接上代码
+
+```css
+width: 300px;
+height: 100px;
+margin: 50px;
+word-wrap: break-word;
+background-image: linear-gradient(white, white), url('./fish.jpg');
+padding: 10px;
+border: 20px solid transparent;
+background-size: cover;
+background-clip: padding-box, border-box;
+background-origin: border-box;
+```
+
+信封样式
+
+```css
+width: 800px;
+height: 300px;
+margin: 50px;
+padding: 40px;
+border: 40px solid transparent;
+background: linear-gradient(white, white),
+repeating-linear-gradient(-45deg, red 0, red 10px, transparent 0, transparent 20px, #58a 0, #58a 30px, transparent 0, transparent 40px);
+background-clip: padding-box, border-box;
+background-origin: border-box;
+```
+
+蚂蚁行军
+
+```css
+@keyframes ants {
+    to {
+        background-position: 100% 100%;
+    }
+}
+
+.marching-ants {
+    width: 300px;
+    height:100px;
+    margin:50px;
+    padding: 1em;
+    border: 1px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+    repeating-linear-gradient(-45deg,
+    black 0, black 25%, white 0, white 50%) 0 / 1em 1em;
+    animation: ants 12s linear infinite;
+}
+```
