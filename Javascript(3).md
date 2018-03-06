@@ -1,4 +1,4 @@
-****# Javascript(3)
+# Javascript(3)
 
 ---
 
@@ -455,5 +455,77 @@ querySelectorAll():与querySelector方法类似，不同的是此方法返回的
 #### scrollIntoView()方法
 
 使滚动条滚动到调用元素的顶部与视口顶部平齐的地方(为某个元素设置焦点也会产生相同的效果)
+
+## DOM2和DOM3
+
+### 样式
+
+####访问元素样式
+
+可以直接用style属性来访问样式（带-的样式属性需要转换成驼峰形式）
+
+
+style对象有以下属性和方法
+
+* cssText：能够访问到style特性中的CSS代码
+* length：应用给元素的CSS属性的数量
+* parentRule：表示CSS信息的CSSRule对象
+* getPropertyCSSValue(propertyName)：返回给定属性值的CSSValue对象
+* getPropertyValue(propertyName)：返回给定属性的字符串值
+* item(index)：返回给定位置的CSS属性的名称
+* removeProperty(propertyName)：从样式中删除给定属性
+* setProperty(peropertyName,value,priority)：将给定属性设置为响应的值，并加上优先权标志
+
+#### 操作样式表
+
+通过document.styleSheets可以访问到文档全部的样式表，是list的形式，属性和方法如下
+
+* disabled：表示样式表是否被禁用的布尔值，设置为true则禁用样式表
+* href：如果样式表是通过link包含的，则是样式表的URL，否则，是null
+* ownerNode：如果样式表是通过@import导入的，则属性值为null
+* parentStyleSheet：在当前样式表是通过@import导入的情况下，这个属性是一个指向导入它的样式表的指针
+* title：ownerNode中title属性的值
+* type：表示样式表类型的字符串。就CSS样式表而言，这个字符串是type/css
+* cssRules：样式表中包含的样式规则的集合，IE有一个rules属性
+* ownerRule：如果样式表是通过@import导入的，这个属性就是一个指针，指向表示导入的规则，否则值为null
+* deleteRule(index)：删除cssRules集合中指定的规则，IE用removeRule()方法
+* insertRule(rule,index)：向cssRules集合中指定的位置插入rule字符串，ie用addRule()方法
+
+CSS规则
+
+* cssText：返回整条规则对应的文本（safari全部转换成小写，ie不支持）
+* parentRule：如果当前规则是导入规则，这个属性引用的就是导入规则，否则为null（ie不支持）
+* parentStyleSheet：当前规则所属的样式表（ie不支持）
+* selectorText：返回当前规则的选择符文本
+* style：一个CSSStyleDeclaration对象，可以通过它设置和取得规则中指定的样式值
+
+### 元素大小
+
+* 偏移量
+    * offsetHeight：元素在垂直方向上占用的空间大小。包括元素的高度、水平滚动条的高度、上边框高度和下边框高度
+    * offsetWidth：元素在水平方向上占用的空间大小。包括元素的高度、垂直滚动条的高度、左边框宽度和右边框宽度
+    * offsetLeft：元素的左外边框至包含元素的左内边框之间的像素距离
+    * offsetTop：元素的上外边框至包含元素的上内边框之间的像素距离
+
+包含元素的引用保存在offsetParent属性中
+
+* 客户区大小(确定视口大小ie7不支持document.documentElement所以要用document.body)
+    * clientWidth：是元素内容区宽度加上左右内边距宽度
+    * clientHeight：是内容区高度加上上下内边距高度
+* 滚动大小
+    * scrollHeight：在没有滚动条下，内容高度
+    * scrollWidth：在没有滚动条下，内容宽度
+    * scrollLeft：被隐藏在内容区左侧的像素数，可改变
+    * scrollTop：被隐藏在内容区域上方的像素数，可改变
+
+### 范围
+
+* 创建范围：document.createRange()
+* setStart：接受两个参数一个是参照节点，一个是偏移量值
+* setEnd:同上
+* deleteContents()：删除范围所包含的内容
+* extractContents()：也会移除范围选区，但是会返回文档片段
+* cloneContents()：创建范围对象的一个副本
+* insertNode()：向范围选区的开始处插入一个节点
 
 ## ^_^未完待续，敬请期待！
