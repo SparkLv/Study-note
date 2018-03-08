@@ -213,3 +213,36 @@ background-origin: border-box;
     animation: ants 12s linear infinite;
 }
 ```
+
+## 形状
+
+### 自适应的椭圆
+
+利用border-radius来实现
+
+椭圆
+
+```CSS
+border-radius:50%/50%;
+//前者为水平半径、后者为垂直半径
+```
+
+半椭圆
+
+border-radius可以设置4组不同的值
+
+例如
+
+```css
+border-radius: 50% /100% 100% 0 0 ;
+```
+
+四分之一椭圆
+
+```css
+border-radius: 100% 0 0 0/100% 0 0 0;
+//或
+border-radius: 100% 0 0 0;
+```
+
+### 平行四边形
