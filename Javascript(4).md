@@ -257,3 +257,8 @@ keypress中e有charCode属性，再使用String.fromCharCode()方法将编码转
 
 Option
 
+* index:当前选项在option集合中的索引
+* label:当前选项的标签，等价于HTML中的label特性
+* selected:布尔值，表示当前选项是否被选中
+* text:选项的文本
+* value:选项的值
