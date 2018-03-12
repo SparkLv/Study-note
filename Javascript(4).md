@@ -18,6 +18,7 @@
 #### DOM0级
 
 类似
+
 ```js
 btn.onclick = function(){
     statement
@@ -98,14 +99,14 @@ event对象在window中，而且属性和方法也不同，IE9及以上支持DOM
 * pageX和pageY：表示鼠标光标在页面中的位置，非视口包括滚动
 * screenX和screenY：相对于整个电脑屏幕的位置
 * 修改键：当点击鼠标后，如果键盘上有响应按键就会返回true的布尔值，否则为false
-    * Shift--shiftKey
-    * Ctrl--ctrlKey
-    * Alt--altKey
-    * Meta--metaKey
+  * Shift--shiftKey
+  * Ctrl--ctrlKey
+  * Alt--altKey
+  * Meta--metaKey
 * 相关元素
-    * relatedTarget属性：只对mouseover和mouseout事件才包含值
+  * relatedTarget属性：只对mouseover和mouseout事件才包含值
 * 鼠标按钮
-    * button属性：0表示主鼠标按钮、1表示中间鼠标按钮、2表示次鼠标按钮
+  * button属性：0表示主鼠标按钮、1表示中间鼠标按钮、2表示次鼠标按钮
 
 #### 键盘与文本事件
 
@@ -117,10 +118,10 @@ event对象在window中，而且属性和方法也不同，IE9及以上支持DOM
 event对象
 
 * 键码
-    * keydown和keyup：keyCode属性会包含一个代码，与键盘上一个特定的键对应
-    * keypress：chartCode属性，代表字符的ASCII编码
-    * textInput：data属性，表示输入的字符（非字符编码）
-        * inputMethod，表示文本输入到文本框的方式
+  * keydown和keyup：keyCode属性会包含一个代码，与键盘上一个特定的键对应
+  * keypress：chartCode属性，代表字符的ASCII编码
+  * textInput：data属性，表示输入的字符（非字符编码）
+    * inputMethod，表示文本输入到文本框的方式
 
 #### HTML5事件
 
@@ -128,11 +129,11 @@ event对象
 * beforeunload：再浏览器卸载前触发（包括刷新）
 * DOMContentLoaded：再形成完整的DOM树之后就会触发，不理会图像，js文件、css文件或其他资源是否已经下载完毕
 * readystatechange：提供与文档或元素的加载状态有关的信息。支持它的对象都会有一个readyState属性
-    * uninitialized：未初始化
-    * loading：正在加载
-    * loaded：加载完毕，即加载数据完成
-    * interactive：交互，可操作对象但未完全加载
-    * complete：对象已经完全加载完毕
+  * uninitialized：未初始化
+  * loading：正在加载
+  * loaded：加载完毕，即加载数据完成
+  * interactive：交互，可操作对象但未完全加载
+  * complete：对象已经完全加载完毕
 * hashchange：#后面的字符串发生改变触发
 
 ### 内存和性能
@@ -142,4 +143,117 @@ event对象
 利用冒泡和event.target来区分不同的目标，进而执行不同的函数
 
 #### 移除事件处理程序
+
+## 表单脚本
+
+### 取得form元素
+
+* document.getElementById('')之类
+* document.forms：可以获取页面中所有的表单
+
+### 提交表单
+
+使用input和button都可以，只需把type设置为submit
+
+input的type为image也可以
+
+只要表单中存在上述任何一种按钮，那么在表单控件拥有焦点的情况下，按回车键就可以提交（textarea例外，会换行）
+
+使用表单元素的submit方法也可以提交表单，reset()方法可以重置为默认值（input和button的type为reset也可以）
+
+### 表单字段
+
+每个表单都有elements属性，该属性是表单中所有元素的集合，是一个有序列表，包含着表单中所有字段，可以通过索引或者name来访问。
+
+共有的表单字段属性和方法(除了fieldset)
+
+* disabled：表示当前字段是否被禁用
+* form：指向当前字段所属表单的指针
+* name：当前字段的名称
+* readOnly：表示当前字段是否只读
+* tabIndex：表示当前字段的切换序号
+* type：当前字段的类型
+* value：当前字段将被提交给服务器的值(对于文件字段来书，是只读的)
+
+* focus()：用于将浏览器的焦点设置到表单字段，即激活表单字段，(html5新增autofocus属性，只要设置这个属性，js就能自动把焦点移动到相应字段)
+* blur()：移走焦点
+
+共有的表单字段事件
+
+* blur：当前字段失去焦点时触发
+* change：对于input和textarea元素，在他们失去焦点且value值改变时触发，对于select元素，在其选项改变时触发
+* focus：当前字段获得焦点时触发
+
+文本框脚本
+
+* size属性可以指定文本框中能够显示的字符数
+* value特性可以设置文本框的初始值(尽量不要使用setAtrribute设置value，因为不一定会反应在dom中)
+* maxlength用于指定文本框可以接受的最大字符数
+* textarea
+  * rows和cols分别指定文本框的行数和列数
+  * 不能指定最大字符数
+
+选择文本
+
+select()：text和textarea都有这个方法，用于选中所有文本
+
+select事件：只要用户选择了一个字母，就会触发select事件
+
+取得文本
+
+```js
+input.vaule.substring(input.selectionStart,input,selectionEnd);
+
+//ie8之前不支持
+```
+
+选择部分文本
+
+```js
+setSelectionRange(0,4);
+
+//参数即为索引，ie8不支持
+```
+
+过滤输入
+
+例如：
+
+```js
+keypress中e有charCode属性，再使用String.fromCharCode()方法将编码转换成字符串，最后使用 preventDefault() 屏蔽输入
+```
+
+操作剪贴板
+
+事件：
+
+* beforecopy
+* copy
+* beforecut
+* cut
+* beforepaste
+* paste
+
+访问：
+
+在上述事件对象的clipboardData对象，可以访问剪贴板，有三个方法
+
+1. getData():参数为数据类型
+2. setData():第一个参数是类型，第二个参数是数据
+3. clearData()
+
+选择框脚本
+
+所有表单字段除了共有的属性和方法外，还有以下方法
+
+* add(newOption,reOption):向控件中插入新option元素，在reloption之前
+* multiple:布尔值，表示是否允许多项选择
+* options:控件所有option元素的HTMLCollection
+* remove(index):移除给定位置的选项
+* selectedIndex:基于0的选中项的索引，如果没有选中项则值为-1，对于支持多选的控件，只保存选中项中第一项的索引
+* size:选择框中可见的行数
+
+有value则value为指定value，无value则value值为文本
+
+Option
 
