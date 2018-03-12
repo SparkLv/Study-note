@@ -17,50 +17,50 @@ background:white;
 
 1. box-shadow
     * 利用box-shadow第四个参数，让投影面积加大或减小，可以加任意层边框
-    *   ```css
-        box-shadow:0 0 0 10px #655,
-                   0 0 0 15px deeppink,
-                   0 2px 5px 15px rgba(0,0,0,.6);
-        ```
+    * ```css
+      box-shadow:0 0 0 10px #655,
+                 0 0 0 15px deeppink,
+                 0 2px 5px 15px rgba(0,0,0,.6);
+      ```
     * 但是对于虚线等box-shadow无法实现
     * 另外对于悬停、点击事件，需要加上inset关键字，来绘制在元素内圈
-    *   ```css
-        box-shadow:inset 0 0 0 10px #655,
-        ```
+    * ```css
+      box-shadow:inset 0 0 0 10px #655,
+      ```
 2. outline
     * 只可以用来设置一层边框
-    *   ```css
-        outline: 5px solid deeppink;
-        ```
+    * ```css
+      outline: 5px solid deeppink;
+      ```
     * 可以用outline-offset来设置内边框
-    *   ```css
-        outline: 5px solid deeppink;
-        outline-offset: -10px;
-        ```
+    * ```css
+      outline: 5px solid deeppink;
+      outline-offset: -10px;
+      ```
     * 但是没有border-radius贴合
 
 ### 背景定位
 
 要想背景图片距离右下角固定宽度
 
-1. background-position的扩展语法
-    *  在偏移量前面加上关键字right和bottom，对于不支持的浏览器能够回退
-    *   ```css
-        background: url(xxx) bottom right #fff;
-        background-position:right 20px bottom 10px;
-        ```
-2. background-origin
-    * 默认值是padding-box，使用content-box可以使偏移量等于内边距
-    *   ```css
-        padding:10px 20px;
-        background:url(xxx) bottom right;
-        background-origin: content-box;
-        ```
-3. calc()
-    *   ```css
-        background:url(xxx);
-        background-position:calc(100% - 20px) calc(100% - 10px);
-        ```
+* background-position的扩展语法
+  * 在偏移量前面加上关键字right和bottom，对于不支持的浏览器能够回退
+  * ```css
+    background: url(xxx) bottom right #fff;
+    background-position:right 20px bottom 10px;
+    ```
+* background-origin
+  * 默认值是padding-box，使用content-box可以使偏移量等于内边距
+  * ```css
+    padding:10px 20px;
+    background:url(xxx) bottom right;
+    background-origin: content-box;
+    ```
+* calc()
+  * ```css
+    background:url(xxx);
+    background-position:calc(100% - 20px) calc(100% - 10px);
+    ```
 
 ### 条纹背景
 
@@ -96,26 +96,26 @@ background:white;
 ### 复杂背景图案
 
 1. 网格
-    *  ```css
-        background:white;
-        background-image:linear-gradient(90deg,rgba(200,0,0,0.5) 50%,transparent 0),
-        linear-gradient(rgba(200,0,0,0.5) 50%, transparent 0);
-        background-size:30px 30px;
-        //也可以用px做单位取代百分比
-        //还可以吧两个背景叠加起来
-        ```
+    * ```css
+      background:white;
+      background-image:linear-gradient(90deg,rgba(200,0,0,0.5) 50%,transparent 0),
+      linear-gradient(rgba(200,0,0,0.5) 50%, transparent 0);
+      background-size:30px 30px;
+      //也可以用px做单位取代百分比
+      //还可以吧两个背景叠加起来
+      ```
 2. 波点
-    *   ```css
-        background:#655;
-        background-image:radial-gradient(tan 30%, transparent 0);
-        background-size:30px 30px;
-        //改进
-        background:#655;
-        background-image:radial-gradient(tan 30%,transparent 0),
-        radial-gradient(tan 30%,transparent 0);
-        bakcground-size:30px 30px;
-        background-position:0 0,15px 15px;
-        ```
+    * ```css
+      background:#655;
+      background-image:radial-gradient(tan 30%, transparent 0);
+      background-size:30px 30px;
+      //改进
+      background:#655;
+      background-image:radial-gradient(tan 30%,transparent 0),
+      radial-gradient(tan 30%,transparent 0);
+      bakcground-size:30px 30px;
+      background-position:0 0,15px 15px;
+      ```
 3. 棋盘
     * 将两个三角形拼在一起
         ```css
@@ -246,3 +246,47 @@ border-radius: 100% 0 0 0;
 ```
 
 ### 平行四边形
+
+```css
+ .box {
+    width: 300px;
+    height: 200px;
+    margin: 100px;
+    position: relative;
+    line-height:200px;
+    text-align:center;
+}
+
+.box:after {
+    content:'';
+    position: absolute;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+    background-color:#e81;
+    z-index:-1;
+    transform:skew(30deg);
+}
+```
+
+重点在于边缘变成平行四边形，而文字不能变
+
+### 菱形图片
+
+```css
+ .box {
+    width: 300px;
+    height: 300px;
+    margin:50px;
+    transform:rotate(45deg);
+    overflow: hidden;
+}
+
+.box img {
+    width: 300px;
+    height: 300px;
+    transform:rotate(-45deg) scale(1.42);
+}
+//1.42为根号2，即对角线
+```
