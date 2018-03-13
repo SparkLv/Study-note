@@ -262,3 +262,27 @@ Option
 * selected:布尔值，表示当前选项是否被选中
 * text:选项的文本
 * value:选项的值
+
+## HTML5脚本编程
+
+### 原生拖放
+
+拖动一个元素时，将依次触发下列事件
+
+1. dragstart
+1. drag:元素被拖动期间会重复触发
+1. dragend:无论放没放到有效的目标上，拖动结束都会触发
+
+当某个元素被拖动到一个有效的放置目标上时，会依次发生
+
+1. dragenter:进入触发
+1. dragover:移动持续触发
+1. dragleave:拖出放置目标
+1. drop:放置触发
+
+dataTransfer是事件对象的一个属性，有两个主要方法
+
+1. getData():获取值
+1. setData():第一个参数为text或URL，第二个参数是字符串
+
+可拖动：使用draggable属性
