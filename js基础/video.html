@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #player {
+            /* width: 490px; */
+            /* height: 210px; */
+            width: 100%;
+            height: 100%;
+        }
+
+        #player-box {
+            position: relative;
+            /* width: 490px; */
+            /* height: 210px; */
+            width: 100%;
+            height: 100%;
+            background-color:#000;
+        }
+
+        #player-mask {
+            visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: rgba(50, 50, 50, 0.3);
+        }
+
+        #mask-play {
+            display: inline-block;
+            position: absolute;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 50px;
+            width: 50px;
+            height: 50px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #player-box:hover #player-mask {
+            visibility: visible;
+        }
+
+        #control-bar {
+            position: absolute;
+            width: 100%;
+            height: 30px;
+            background-color: #eee;
+            bottom: -35px;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        #control-play {
+            float: left;
+            font-size: 30px;
+            line-height: 30px;
+            cursor: pointer;
+        }
+
+        #control-time {
+            float: left;
+            line-height: 30px;
+            margin-left: 20px;
+        }
+
+        #progress-bar {
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            bottom: -5px;
+            background-color: #fff;
+        }
+
+        #pass-progress {
+            width: 0;
+            height: 5px;
+            background: green;
+        }
+
+        #full-screen {
+            cursor: pointer;
+            float: right;
+            line-height: 30px;
+        }
+
+        video::-webkit-media-controls-enclosure {
+            /*禁用播放器控制栏的样式*/
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="player-box">
+        <div id="player-mask">
+            <span id="mask-play">></span>
+        </div>
+        <video id="player">
+            <source src="./tomb-raider-trailer-1_h720p~1.mp4" type="video/mp4">
+            <source src="./tomb-raider-trailer-1_h720p.Ogg" type="video/ogg">
+        </video>
+        <div id="progress-bar">
+            <div id="pass-progress"></div>
+        </div>
+        <div id="control-bar">
+            <div id="control-play">></div>
+            <div id="control-time">00:00/00:00</div>
+            <div id="full-screen">全屏</div>
+        </div>
+    </div>
+    <script>
+        window.onload = function () {
+            const player = document.getElementById('player');
+            const playerBox = document.getElementById('player-box');
+            const maskPlay = document.getElementById('mask-play');
+            const controlPlay = document.getElementById('control-play');
+            const controlTime = document.getElementById('control-time');
+            const passProgress = document.getElementById('pass-progress');
+            const fullScreen = document.getElementById('full-screen');
+            const controlBar = document.getElementById('control-bar');
+
+            let duration = player.duration;
+
+            let computeBar;
+
+            function transTime(time) {
+                let min = Math.floor(time / 60);
+                let sec = Math.ceil(time - min * 60);
+                if (min < 10) {
+                    min = '0' + min;
+                }
+                if (sec < 10) {
+                    sec = '0' + sec;
+                }
+                return min + ':' + sec;
+            }
+
+            function computeTime() {
+                computerBar = setInterval(function () {
+                    let now = transTime(player.currentTime) + '/' + transTime(duration);
+                    controlTime.innerHTML = now;
+                    passProgress.style.width = progressPercent();
+                }, 100)
+            }
+
+            function progressPercent() {
+                return (player.currentTime / duration) * 100 + '%';
+            }
+            controlTime.innerHTML = `00:00/${transTime(duration)}`;
+
+            maskPlay.addEventListener('click', function (e) {
+                if (!player.paused) {
+                    this.innerHTML = '>';
+                    player.pause();
+                    clearInterval(computeBar);
+                }
+                else {
+                    this.innerHTML = '||';
+                    player.play();
+                    computeTime();
+                }
+            }, false)
+
+            controlPlay.addEventListener('click', function (e) {
+                if (!player.paused) {
+                    this.innerHTML = '>';
+                    maskPlay.innerHTML = '>';
+                    player.pause();
+                    clearInterval(computeBar);
+                }
+                else {
+                    this.innerHTML = '||';
+                    maskPlay.innerHTML = '||';
+                    player.play();
+                    computeTime();
+                }
+            }, false)
+
+            fullScreen.addEventListener('click', function () {
+                playerBox.webkitRequestFullscreen();
+                controlBar.style.bottom = '0px';
+            }, false)
+        }
+    </script>
+</body>
+
+</html>
