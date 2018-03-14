@@ -286,3 +286,11 @@ dataTransfer是事件对象的一个属性，有两个主要方法
 1. setData():第一个参数为text或URL，第二个参数是字符串
 
 可拖动：使用draggable属性
+
+### 媒体元素
+
+属性：autoplay duration controls loop muted paused等
+
+事件：play pause等
+
+另外全屏情况webkitRequestFullscreen() requestFullScreen()等
