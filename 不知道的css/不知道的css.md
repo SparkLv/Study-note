@@ -290,3 +290,12 @@ border-radius: 100% 0 0 0;
 }
 //1.42为根号2，即对角线
 ```
+
+### 切角效果
+
+```css
+background: #e8e8e8;
+background: linear-gradient(45deg, transparent 15px, #e8e8e8 0) left, linear-gradient(-45deg, transparent 15px, #e8e8e8 0) right;
+background-size: 50% 100%;
+background-repeat: no-repeat;
+```

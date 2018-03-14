@@ -7,6 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
+        .all {
+            width: 500px;
+            height: 300px;
+            margin: 50px;
+        }
+
         .box {
             width: 500px;
             height: 300px;
@@ -221,15 +227,22 @@
         .box15 {
             width: 300px;
             height: 300px;
-            margin:50px;
-            transform:rotate(45deg);
+            margin: 50px;
+            transform: rotate(45deg);
             overflow: hidden;
         }
 
         .box15 img {
             width: 300px;
             height: 300px;
-            transform:rotate(-45deg) scale(1.42);            
+            transform: rotate(-45deg) scale(1.42);
+        }
+
+        .box16 {
+            background: #e8e8e8;
+            background: linear-gradient(45deg, transparent 15px, #e8e8e8 0) left, linear-gradient(-45deg, transparent 15px, #e8e8e8 0) right;
+            background-size: 50% 100%;
+            background-repeat: no-repeat;
         }
     </style>
 </head>
@@ -267,6 +280,8 @@
     </div>
     <div class="box15">
         <img src="./test1.jpg" alt="test1">
+    </div>
+    <div class="all box16">
     </div>
     <script>
         let store = () => {
