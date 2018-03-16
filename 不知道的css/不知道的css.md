@@ -299,3 +299,34 @@ background: linear-gradient(45deg, transparent 15px, #e8e8e8 0) left, linear-gra
 background-size: 50% 100%;
 background-repeat: no-repeat;
 ```
+
+### 饼图
+
+```css
+.box {
+    width:500px;
+    height: 500px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, red 50%, green 0);
+}
+
+@keyframes pierun {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(180deg);
+    }
+}
+box::before {
+    content: '';
+    display: block;
+    margin-left: 50%;
+    height: 100%;
+    border-radius: 0 100% 100% 0 / 0 50% 50% 0;
+    background: green;
+    transform-origin: left;
+    animation:pierun 5s infinite;
+    animation-direction: alternate;
+}
+```
