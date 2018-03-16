@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <img id="img" src="./test.jpg" alt="sss" />
+    <canvas id="canvas" width="500" height="600"></canvas>
+    <script>
+        window.onload = function () {
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
+            const img = document.getElementById('img')
+
+            context.shadowColor = '#333';
+            context.shadowOffsetX = 5;
+            context.shadowOffsetY = 2;
+            context.shadowBlur = 4;
+
+            context.fillStyle = "red";
+            context.strokeStyle = 'green';
+
+            // context.fillRect(0, 0, 50, 50);
+            // context.strokeRect(0, 0, 100, 100);
+            // context.clearRect(80, 80, 21, 21);
+
+            context.beginPath();
+            context.save();
+            context.translate(100, 100)
+            context.rotate(45 * Math.PI / 180)
+
+            context.arc(100, 100, 80, Math.PI / 180 * 0, Math.PI / 180 * 180, false);
+            context.moveTo(110, 55);
+
+            // context.lineTo(100,300);
+            context.arcTo(50, 50, 100, 100, 50);
+            context.quadraticCurveTo(150, 100, 200, 230);
+            context.closePath();
+            context.stroke();
+
+            context.restore();
+            context.font = '10px sans-serif';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText('开始', 100, 240);
+
+            context.drawImage(canvas, 100, 50, 100, 100);
+        }
+    </script>
+</body>
+
+</html>
