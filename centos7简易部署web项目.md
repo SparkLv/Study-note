@@ -47,10 +47,10 @@ nginx配置信息
 /usr/share/nginx/html
 网站默认站点配置
 
-/etc/nginx/conf.d/default.conf
+/etc/nginx/nginx.conf
 自定义Nginx站点配置文件存放目录
 
-etc/nginx/conf.d/
+/etc/nginx/conf.d/
 Nginx全局配置
 ```
 
@@ -75,6 +75,17 @@ systemctl restart nginx
 更改之后可能显示403，这是权限不足的情况
 
 chmod -R 755 /usr/share/nginx/html(新的web地址)
+```
+
+配置子域名
+
+目前我的解决方法是在nginx配置文件里再写个sever对象
+```js
+server {
+    server_name //子域名地址
+    root //子域名默认目录
+    include://其他配置
+}
 ```
 
 ### FTP
