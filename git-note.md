@@ -1,278 +1,329 @@
-# git：分布式版本控制系统
+# Git Note
 
 ---
 
-与集中式版本控制系统相比，分布式没用中央服务器，每个人电脑上都是一个完整的版本库。而集中式控制系统需要联网，需要中央服务器。此外git有强大的分支管理。
+## 背景知识
 
-## 安装gitbash后，首先设置
+Git是由Linux之父Linus创建的分布式版本控制系统。  
 
-```javascript
-git config --global user.name ""
-git config --global user.email ""
+相比集中式的控制系统，分布式不需要中央服务器，每个人本地都有一个完整的版本库。另外，git的分支管理相对集中式而言更加强大
+
+## 准备工作
+
+在安装完git后，需要配置name和email
+
+```bash
+# global代表全局配置，也可以对不同的仓库，使用不同的配置
+
+git config --global user.name <Your Name>
+
+git config --global user.email <Your Email>
 ```
 
-创建版本库:
+### 工作区和版本库
 
-```javascript
+#### 工作区
+
+就是初始化git的目录。
+
+#### 版本库
+
+初始化git后会有一个`.git`目录。其中包含着git的版本库，而版本库又包含暂存区(`stage`)，自动创建的第一个分支`master`，以及指向master的一个指针`HEAD`。`git add` 是将文件添加到暂存区，`git commit` 是将暂存区文件一次性提交到当前分支
+
+![areas.png](http://blogcdn.sparklv.cn/areas.png)
+
+## 使用
+
+### 1. 初始化git仓库
+
+```bash
 git init
 ```
 
-把文件添加到仓库
+初始化后当前目录下会有一个`.git`目录。
 
-```javascript
-git add 文件
+### 2. 改动文件提交到暂存区
+
+```bash
+git add <fileName>
+
+# -A参数可以一次性提交所有改动文件
 ```
 
-把文件提交到仓库
+### 3. 暂存区文件提交到当前分支
 
-```javascript
-git commit -m "修改备注"
+```bash
+git commit -m <message>
 ```
 
-## 版本控制
+### 4. 查看当前状态
 
-```javascript
+```bash
 git status
 ```
 
-命令可以让我们时刻掌握仓库当前的状态
+### 5. 查看提交记录
 
-```javascript
-git diff
-```
-
-命令可以看到具体修改了哪些内容
-
-### 版本回退
-
-```javascript
+```bash
 git log
+
+# 使用--pretty=oneline参数 精简log输出
 ```
 
-命令可以看版本历史记录（如果信息太多可以使用--pretty=oneline参数）
+### 6. 版本回退
 
-```javascript
-git reset --hard
+#### 利用HEAD回退
+
+```bash
+git reset --hard HEAD^
 ```
 
-可以用来退回版本
+^的数量为回退几步
 
-* HEAD表示当前版本
-* HEAD^ HEAD^^或HEAD~n来表示回退几个版本
-* 也可以使用版本号，前几位即可
+#### 也可以通过commit id来回退
 
-使用
+```bash
+git reset --hard <commit id>
 
-```javascript
+# id不需要全部输入，部分即可
+```
+
+#### 如果commit id找不到则可以通过reflog来处理
+
+```bash
 git reflog
+
+# reflog记录了每一次的命令，当然也有id的记录
 ```
 
-记录每一次命令，可以查看历史版本号
+### 7. 撤销修改
 
-### 工作区和暂存区
+#### 将还没`add`的文件恢复
 
-工作区就是在电脑里的目录，工作区内有一个隐藏目录.git，不算工作区，是版本库
-版本库中存有暂存区，还有分支、以及指针HEAD
+```bash
+git checkout -- <fileName>
 
-![stage](static/img/stage.png)
-
-```javascript
-git add
+# 文件会回到最近一次git commit或git add状态
 ```
 
-是将文件修改添加到暂存区
+#### 已经`add`到暂存区
 
-```javascript
-git commit
+```bash
+git reset HEAD <fileName>
 ```
 
-是将暂存区的所有内容提交到当前分支
+HEAD表示最新的版本,然后使用上述checkout方法恢复文件
 
-### 管理修改
+#### 已经commit的可以使用上述的版本回退方法(`reset --hard`)
 
-```javascript
-git diff HEAD -- name
+### 8. 远程仓库
+
+#### 将本地仓库和远程仓库关联
+
+```bash
+git remote add origin <url>
 ```
 
-可以查看工作区和版本库里面最新版本的区别
+#### 推送本地内容到远程
 
-### 撤销修改
-
-```javascript
-git checkout -- name
+```bash
+git push -u origin master
 ```
 
-可以丢弃工作区的修改
+第一次需要带上-u参数，这样git不但会把本地master分支推送，还会把分支关联起来
 
-如果已经使用add提交到缓存区:
+#### 从远程克隆
 
-```javascript
-git reset HEAD name
+```bash
+git clone <url>
 ```
 
-可以将暂存区的修改回退到工作区
+#### 查看远程库信息
 
-### 删除文件
-
-如果已经删除文件，这时有两种操作方法
-
-```javascript
-git rm name 直接删除
-git checkout -- name 恢复
+```bash
+git remote
 ```
 
-## 远程仓库
+加上参数 -v 可以显示更加详细的信息
 
-1. 创建SSH Key 在用户主目录下若有则省略2
-1. ssh-keygen -t rsa -C "email"
-1. 在用户主目录下找到id_rsa.pub将这个码添加到github的add ssh key上
+#### 推送分支
 
-### 添加到远程库
-
-1. git remote add origin git@github.com:xx/xx.git 是将远程库和本地库关联
-1. git push -u origin master 推送分支
-1. 关联完毕再推送直接使用$ git push origin master
-
-### 从远程库克隆
-
-```javascript
-git clone git@github.com:xx/xx.git
+```bash
+git push origin <name>
 ```
 
-地址也可以使用`https://`
+#### 创建远程分支到本地
 
-## 分支管理
+```bash
+git checkout -b <name> origin/<name>
+```
 
-### 创建与合并分支
+#### 与远程分支建立关联
 
-```javascript
+```bash
+git branch --set-upstream <name> origin/<name>
+```
+
+#### 抓取分支
+
+```bash
+git pull
+```
+
+#### 变基
+
+```bash
+git rebase
+```
+
+可以把本地未push的分叉提交历史整理成直线
+
+### 9. 分支管理
+
+#### 创建与合并分支:
+
+```bash
 git checkout -b dev
-```
 
--b是直接切换到新建分支，相当于
+# 新建dev分支并切换，相当于
 
-```javascript
 git branch dev
 git checkout dev
 ```
 
-使用
+#### 查看分支
 
-```javascript
+```bash
 git branch
 ```
 
-可以查看当前分支
+#### 合并分支
 
-```javascript
+```bash
 git merge dev
+
+# 合并dev分支到当前分支
 ```
 
-用于合并分支
+#### 删除分支:
 
-```javascript
-git branch -d dev
+```bash
+git branch -d <name>
 ```
 
-用于删除分支
+#### 解决冲突
 
-合并分支可能会出现冲突，将自己的删除再add等
-使用
+保留更改后使用`add`和`commit`重新提交即可
 
-```javascript
-git log
-```
+#### 查看分支合并图
 
-可以看到分支的合并情况
-
-```javascript
+```bash
 git log --graph
 ```
 
-可以看到分支合并图
+#### 通常分支合并时，git会用fast forward模式，这种模式下，删除分支后会丢掉分支信息，如果不想使用这种模式，可以使用
 
-合并使用
+```bash
+git merge --no-ff -m <message> <name>
 
-```javascript
-git merge --no--ff -m "zhushi" dev
+#会在merge时生成一个新的commit
 ```
 
-可以禁用fast forward，留下分支信息
+### 10. 暂存功能
 
-### 保留现场
+#### 保存当前工作现场
 
-```javascript
+```bash
 git stash
 ```
 
-可以用来保留现场
+#### 查看工作现场
 
-```javascript
+```bash
 git stash list
 ```
 
-用来查看现场
+#### 恢复工作现场
 
-```javascript
+```bash
 git stash apply
-```
 
-用来恢复现场
-
-```javascript
 git stash drop
-```
 
-用于删除已
+#第二行是删除stash内容
 
-```javascript
+#或者
+
 git stash pop
+
+#包括删除stash内容
 ```
 
-回复现场并删除stash内容
+### 11. 标签管理
 
-```javascript
-git stash apply stash@{0}
+#### 新增标签
+
+```bash
+
+git tag v1.0
+
+#或者
+
+git tag v1.0 <commit id>
 ```
 
-恢复指定现场
+#### 查看标签
 
-### 多人协作
-
-```javascript
-git remote
+```bash
+git tag
 ```
 
-查看远程库信息
+#### 带有说明的标签
 
-更详细
-
-```javascript
-git remote -v
+```bash
+git tag -a v1.0 -m <message> <commit id>
 ```
 
-克隆后克隆分支
+#### 查看标签详情
 
-```javascript
-git checkout -b dev origin/dev
+```bash
+git show <tagName>
 ```
 
-推送分支
+标签总是和某个commit挂钩。如果这个commit既出现在master分支，又出现在dev分支，那么在这两个分支上都可以看到这个标签
 
-```javascript
-git push origin dev
+#### 删除标签
+
+```bash
+git tag -d <tagName>
 ```
 
-冲突后使用
+#### 推送标签到远程
 
-```javascript
-git pull 把最新提交从origin/dev 抓下来
+```bash
+git push origin <tagName>
+
+#或者推送所有标签
+
+git push origin --tags
 ```
 
-如果pull失败
+#### 删除远程标签
 
-```javascript
-git branch --set-upstream dev origin/dev
+```bash
+#首先删除本地的标签
+
+git tag -d <tagName>
+
+#然后
+
+git push origin :refs/tags/<tagName>
 ```
 
-然后再pull
+### 12. Others
+
+#### 设置别名
+
+```bash
+git config --global alias <alias> <command>
+```
